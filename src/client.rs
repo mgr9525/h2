@@ -548,6 +548,10 @@ where
         self.inner.is_extended_connect_protocol_enabled()
     }
 
+    /// Returns the can increase a stream
+    pub fn can_inc_num_remote_reset_streams(&self) -> bool {
+        self.inner.can_inc_num_remote_reset_streams()
+    }
     /// Returns the current max send streams
     pub fn current_max_send_streams(&self) -> usize {
         self.inner.current_max_send_streams()
@@ -556,6 +560,15 @@ where
     /// Returns the current max recv streams
     pub fn current_max_recv_streams(&self) -> usize {
         self.inner.current_max_recv_streams()
+    }
+    /// Returns the current num send streams
+    pub fn current_num_send_streams(&self) -> usize {
+        self.inner.current_num_send_streams()
+    }
+
+    /// Returns the current num recv streams
+    pub fn current_num_recv_streams(&self) -> usize {
+        self.inner.current_num_recv_streams()
     }
 }
 

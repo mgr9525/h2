@@ -253,6 +253,17 @@ impl Counts {
     pub(crate) fn max_recv_streams(&self) -> usize {
         self.max_recv_streams
     }
+    /// Returns the maximum number of streams that can be initiated by this
+    /// peer.
+    pub(crate) fn num_send_streams(&self) -> usize {
+        self.num_send_streams
+    }
+
+    /// Returns the maximum number of streams that can be initiated by the
+    /// remote peer.
+    pub(crate) fn num_recv_streams(&self) -> usize {
+        self.num_recv_streams
+    }
 
     fn dec_num_streams(&mut self, stream: &mut store::Ptr) {
         assert!(stream.is_counted);

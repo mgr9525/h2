@@ -321,6 +321,10 @@ where
             .is_extended_connect_protocol_enabled()
     }
 
+    pub fn can_inc_num_remote_reset_streams(&self) -> bool {
+        let me = self.inner.lock().unwrap();
+        me.counts.can_inc_num_remote_reset_streams()
+    }
     pub fn current_max_send_streams(&self) -> usize {
         let me = self.inner.lock().unwrap();
         me.counts.max_send_streams()
@@ -329,6 +333,15 @@ where
     pub fn current_max_recv_streams(&self) -> usize {
         let me = self.inner.lock().unwrap();
         me.counts.max_recv_streams()
+    }
+    pub fn current_num_send_streams(&self) -> usize {
+        let me = self.inner.lock().unwrap();
+        me.counts.num_send_streams()
+    }
+
+    pub fn current_num_recv_streams(&self) -> usize {
+        let me = self.inner.lock().unwrap();
+        me.counts.num_recv_streams()
     }
 }
 
