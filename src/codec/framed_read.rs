@@ -175,6 +175,13 @@ fn decode_frame(
                     proto_err!(stream: "malformed header block; stream={:?}", id);
                     return Err(Error::library_reset(id, Reason::PROTOCOL_ERROR));
                 },
+                Err(frame::Error::HeaderListWayTooLarge) => {
+                    proto_err!(conn: "decoded header list size over abuse limit");
+                    return Err(Error::library_go_away_data(
+                        Reason::ENHANCE_YOUR_CALM,
+                        "header_list_way_too_large",
+                    ));
+                },
                 Err(e) => {
                     proto_err!(conn: "failed HPACK decoding; err={:?}", e);
                     return Err(Error::library_go_away(Reason::PROTOCOL_ERROR));
@@ -246,7 +253,7 @@ fn decode_frame(
             .into()
         }
         Kind::GoAway => {
-            let res = frame::GoAway::load(&bytes[frame::HEADER_LEN..]);
+            let res = frame::GoAway::load(head, &bytes[frame::HEADER_LEN..]);
             res.map_err(|e| {
                 proto_err!(conn: "failed to load GO_AWAY frame; err={:?}", e);
                 Error::library_go_away(Reason::PROTOCOL_ERROR)
@@ -346,6 +353,13 @@ fn decode_frame(
                     let id = head.stream_id();
                     proto_err!(stream: "malformed CONTINUATION frame; stream={:?}", id);
                     return Err(Error::library_reset(id, Reason::PROTOCOL_ERROR));
+                }
+                Err(frame::Error::HeaderListWayTooLarge) => {
+                    proto_err!(conn: "decoded CONTINUATION header list size over abuse limit");
+                    return Err(Error::library_go_away_data(
+                        Reason::ENHANCE_YOUR_CALM,
+                        "header_list_way_too_large",
+                    ));
                 }
                 Err(e) => {
                     proto_err!(conn: "failed HPACK decoding; err={:?}", e);
