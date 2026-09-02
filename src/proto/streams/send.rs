@@ -664,4 +664,24 @@ impl Send {
     pub(crate) fn is_extended_connect_protocol_enabled(&self) -> bool {
         self.is_extended_connect_protocol_enabled
     }
+
+    pub(crate) fn is_pending_send_empty(&self) -> bool {
+        self.prioritize.is_pending_send_empty()
+    }
+
+    pub(crate) fn is_pending_capacity_empty(&self) -> bool {
+        self.prioritize.is_pending_capacity_empty()
+    }
+
+    pub(crate) fn is_pending_open_empty(&self) -> bool {
+        self.prioritize.is_pending_open_empty()
+    }
+
+    pub(crate) fn connection_send_capacity(&self) -> usize {
+        self.prioritize.connection_send_capacity()
+    }
+
+    pub(crate) fn has_in_flight_data_frame(&self) -> bool {
+        self.prioritize.has_in_flight_data_frame()
+    }
 }

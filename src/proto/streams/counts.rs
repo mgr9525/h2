@@ -331,6 +331,34 @@ impl Counts {
         self.num_recv_streams
     }
 
+    pub(crate) fn max_local_reset_streams(&self) -> usize {
+        self.max_local_reset_streams
+    }
+
+    pub(crate) fn num_local_reset_streams(&self) -> usize {
+        self.num_local_reset_streams
+    }
+
+    pub(crate) fn num_remote_reset_streams(&self) -> usize {
+        self.num_remote_reset_streams
+    }
+
+    pub(crate) fn num_local_error_reset_streams(&self) -> usize {
+        self.num_local_error_reset_streams
+    }
+
+    pub(crate) fn data_frame_budget_available(&self) -> usize {
+        self.data_frame_budget.available
+    }
+
+    pub(crate) fn data_frame_budget_max(&self) -> usize {
+        self.data_frame_budget.max
+    }
+
+    pub(crate) fn num_recv_empty_data_frames(&self) -> usize {
+        self.num_recv_empty_data_frames
+    }
+
     fn dec_num_streams(&mut self, stream: &mut store::Ptr) {
         assert!(stream.is_counted);
 

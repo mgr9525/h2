@@ -108,6 +108,26 @@ impl Prioritize {
         self.max_buffer_size
     }
 
+    pub(crate) fn is_pending_send_empty(&self) -> bool {
+        self.pending_send.is_empty()
+    }
+
+    pub(crate) fn is_pending_capacity_empty(&self) -> bool {
+        self.pending_capacity.is_empty()
+    }
+
+    pub(crate) fn is_pending_open_empty(&self) -> bool {
+        self.pending_open.is_empty()
+    }
+
+    pub(crate) fn connection_send_capacity(&self) -> usize {
+        self.flow.available().as_size() as usize
+    }
+
+    pub(crate) fn has_in_flight_data_frame(&self) -> bool {
+        matches!(self.in_flight_data_frame, InFlightData::DataFrame(_))
+    }
+
     /// Queue a frame to be sent to the remote
     pub fn queue_frame<B>(
         &mut self,

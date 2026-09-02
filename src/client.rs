@@ -587,6 +587,11 @@ where
     pub fn get_current_connection_window_size(&self) -> usize {
         self.inner.current_connection_window_size()
     }
+
+    /// Returns a snapshot of connection and stream-level telemetry.
+    pub fn get_conn_info(&self) -> ConnInfo {
+        self.inner.get_conn_info()
+    }
 }
 
 impl<B> fmt::Debug for SendRequest<B>
@@ -1483,6 +1488,77 @@ where
     pub fn max_concurrent_recv_streams(&self) -> usize {
         self.inner.max_recv_streams()
     }
+
+    /// Returns a snapshot of connection and stream-level telemetry.
+    pub fn get_conn_info(&self) -> ConnInfo {
+        self.inner.get_conn_info()
+    }
+}
+
+/// Snapshot of connection-level HTTP/2 state.
+#[derive(Debug)]
+pub struct ConnInfo {
+    /// Current bytes of unreleased inbound data on the connection.
+    pub recv_pressure: usize,
+    /// Current target connection window size.
+    pub connection_window_size: usize,
+    /// Current unreserved outbound connection-level flow-control capacity.
+    pub connection_send_capacity: usize,
+    /// Whether the connection currently has any active streams.
+    pub has_streams: bool,
+    /// Whether stream references remain beyond the connection's own ref.
+    pub has_other_references: bool,
+    /// Whether no frames are currently staged in the shared send buffer.
+    pub is_send_buffer_empty: bool,
+    /// Whether no streams are waiting to write frames to the socket.
+    pub is_pending_send_empty: bool,
+    /// Whether no streams are waiting for outbound connection capacity.
+    pub is_pending_capacity_empty: bool,
+    /// Whether no locally initiated streams are waiting for concurrency capacity.
+    pub is_pending_open_empty: bool,
+    /// Whether a DATA frame is currently being written by the codec.
+    pub has_in_flight_data_frame: bool,
+    /// Remaining DATA framing-overhead budget for this connection.
+    pub data_frame_budget_available: usize,
+    /// Maximum DATA framing-overhead budget for this connection.
+    pub data_frame_budget_max: usize,
+
+    /// Maximum number of locally initiated streams.
+    pub max_send_streams: usize,
+
+    /// Current number of locally initiated streams.
+    pub num_send_streams: usize,
+
+    /// Maximum number of remotely initiated streams.
+    pub max_recv_streams: usize,
+
+    /// Current number of remotely initiated streams.
+    pub num_recv_streams: usize,
+
+    /// Maximum number of pending locally reset streams.
+    pub max_local_reset_streams: usize,
+
+    /// Current number of pending locally reset streams.
+    pub num_local_reset_streams: usize,
+
+    /// Maximum number of remotely reset streams held in pending-accept state.
+    pub max_remote_reset_streams: usize,
+
+    /// Current number of remotely reset streams held in pending-accept state.
+    pub num_remote_reset_streams: usize,
+
+    /// Maximum number of locally reset streams due to protocol error.
+    pub max_local_error_reset_streams: Option<usize>,
+
+    /// Total number of locally reset streams due to protocol error.
+    pub num_local_error_reset_streams: usize,
+
+    /// Number of empty, non-final DATA frames received.
+    pub num_recv_empty_data_frames: usize,
+    /// Number of streams currently indexed by stream ID.
+    pub num_active_streams: usize,
+    /// Number of stream slots currently retained by the store.
+    pub num_wired_streams: usize,
 }
 
 impl<T, B> Future for Connection<T, B>

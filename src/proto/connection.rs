@@ -1,3 +1,4 @@
+use crate::client::ConnInfo;
 use crate::codec::UserError;
 use crate::frame::{Reason, StreamId};
 use crate::{client, server};
@@ -201,6 +202,10 @@ where
     #[cfg(feature = "unstable")]
     pub fn num_wired_streams(&self) -> usize {
         self.inner.streams.num_wired_streams()
+    }
+
+    pub fn get_conn_info(&self) -> ConnInfo {
+        self.inner.streams.get_conn_info()
     }
 
     /// Returns `Ready` when the connection is ready to receive a frame.
