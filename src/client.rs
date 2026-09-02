@@ -575,6 +575,18 @@ where
     pub fn current_num_recv_streams(&self) -> usize {
         self.inner.current_num_recv_streams()
     }
+
+    /// 返回这条连接当前的接收侧压力，也就是还没被上层消费并释放的字节数。
+    /// 顶层可以用它判断是否继续把新的大流量请求复用到这条 h2 连接上。
+    pub fn recv_pressure(&self) -> usize {
+        self.inner.recv_pressure()
+    }
+
+    /// 返回这条连接当前的目标窗口大小。
+    /// 当启用自适应窗口时，这个值会随着 `hyper` 的 BDP 估计动态变化。
+    pub fn get_current_connection_window_size(&self) -> usize {
+        self.inner.current_connection_window_size()
+    }
 }
 
 impl<B> fmt::Debug for SendRequest<B>

@@ -122,6 +122,18 @@ impl Recv {
         self.init_window_sz
     }
 
+    pub(crate) fn connection_pressure(&self) -> usize {
+        self.in_flight_data as usize
+    }
+
+    pub(crate) fn current_connection_window_size(&self) -> usize {
+        self.flow
+            .available()
+            .add(self.in_flight_data)
+            .expect("valid connection window")
+            .checked_size() as usize
+    }
+
     /// Returns the ID of the last processed stream
     pub fn last_processed_id(&self) -> StreamId {
         self.last_processed_id

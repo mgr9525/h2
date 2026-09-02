@@ -387,6 +387,16 @@ where
         let me = self.inner.lock().unwrap();
         me.counts.num_recv_streams()
     }
+
+    pub(crate) fn recv_pressure(&self) -> usize {
+        let me = self.inner.lock().unwrap();
+        me.actions.recv.connection_pressure()
+    }
+
+    pub(crate) fn current_connection_window_size(&self) -> usize {
+        let me = self.inner.lock().unwrap();
+        me.actions.recv.current_connection_window_size()
+    }
 }
 
 impl<B> DynStreams<'_, B> {
